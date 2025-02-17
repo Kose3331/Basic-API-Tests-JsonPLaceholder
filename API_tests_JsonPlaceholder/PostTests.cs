@@ -91,6 +91,41 @@ namespace API_tests_JsonPlaceholder
           
         }
 
+        [Test]
+
+        public void UpdateAPost()
+        {
+            var updatedTitle = "Edited Title";
+            var postToUpdate = 1;
+
+            var updateRequest = new RestRequest($"posts/{postToUpdate}", Method.Patch);
+            updateRequest.AddJsonBody(new
+            {
+                title = updatedTitle
+            });
+
+            var updateResponse = client.Execute(updateRequest);
+
+            Assert.That(updateResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Response in not successfull!");
+
+            var post = JObject.Parse(updateResponse.Content);
+
+            Assert.That(post["title"]?.ToString(), Is.EqualTo("Edited Title"), "Title doesnt match!");
+        }
+
+
+        [Test]
+
+        public void DeleteAPost()
+        {
+            var postToDelete = 55;
+
+            var deleteRequest = new RestRequest($"posts/{postToDelete}",Method.Delete);
+            var deleteResponse = client.Execute(deleteRequest);
+
+            Assert.That(deleteResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Response is not successfull!");
+
+        }
 
 
 
