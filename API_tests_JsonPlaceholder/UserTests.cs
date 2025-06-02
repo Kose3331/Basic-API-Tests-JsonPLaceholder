@@ -125,8 +125,55 @@ namespace API_tests_JsonPlaceholder
             Assert.That(newUser["id"]?.Value<int>(), Is.EqualTo(11), "Incorrect Id for the new user!");
             Assert.That(newUser["name"]?.ToString(), Is.EqualTo("Konstantin"), "Incorrect name for the new user!");
             Assert.That(newUser["username"]?.ToString(), Is.EqualTo("Kosta"), "Incorrect username for the new user!");
+
+
         }
 
+
+        [Test]
+
+        public void UpdateUser()
+        {
+            var userToUpdateID = 2;
+            var newUsername = "Erwin Merwin";
+
+            var updatedUser = @"
+             {
+               ""name"": ""Ervin Howell"",
+               ""username"": ""Erwin Merwin"",
+               ""email"": ""Shanna@melissa.tv"",
+               ""address"": { 
+                ""street"": ""Victor Plains"",
+                ""suite"": ""Suite 879"",
+                ""city"": ""Wisokyburgh"",
+                ""zipcode"": ""90566-7771"",
+                ""geo"": {
+                    ""lat"": ""-43.9509"",
+                    ""lng"": ""-34.4618""
+                    }
+                },
+              ""phone"":""010-692-6593 x09125"",
+              ""website"":""anastasia.net"",
+              ""company"": {
+                ""name"": ""Deckow-Crist"",
+                ""catchprase"": ""Proactive didactic contingency"",
+                ""bs"": ""synergize scalable supply-chains""
+              }
+               
+              }";
+
+            var request = new RestRequest($"/users/{userToUpdateID}", Method.Patch);
+            request.AddJsonBody(updatedUser);
+            var response = client.Execute(request);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Response status code is not succesfful");
+            Assert.That(response.Content, Is.Not.Null.Or.Empty, "Content is null or empty");
+
+            var editedUser = JObject.Parse(response.Content);
+
+            Assert.That(editedUser["id"]?.Value<int>(), Is.EqualTo(2), "Incorrect Id for the edited user!");
+            Assert.That(editedUser["username"]?.ToString(), Is.EqualTo(newUsername), "Usernames doesnt match");
+        }
 
     }
 }
